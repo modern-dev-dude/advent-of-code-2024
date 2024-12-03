@@ -12,7 +12,7 @@ import (
 func DayTwo() {
 	// put each list into a sorted slice
 	// compare the distance between
-	fileName := "problem-data.txt"
+	fileName := "test-data.txt"
 	relativePath := "pkg/problems/day-two"
 
 	scanner, err := utils.ScanFile(fileName, relativePath)
@@ -22,7 +22,7 @@ func DayTwo() {
 
 	defer scanner.CloseFile()
 
-	partOne(scanner)
+	partTwo(scanner)
 }
 
 func partOne(scanner *utils.File) {
@@ -44,21 +44,12 @@ func partOne(scanner *utils.File) {
 		desc := false
 
 		for idx, char := range listOfChars {
-
-			val, err := strconv.Atoi(char)
-			if err != nil {
-				panic(err)
-			}
-
-			prevVal = val
+			val := convertCharToInt(char)
 			if idx == 0 {
 				continue
 			}
 
-			prevVal, err = strconv.Atoi(listOfChars[idx-1])
-			if err != nil {
-				panic(err)
-			}
+			prevVal = convertCharToInt(listOfChars[idx-1])
 
 			if idx == 1 {
 				desc = val < prevVal
@@ -89,4 +80,82 @@ func partOne(scanner *utils.File) {
 	}
 
 	fmt.Printf("Safe reports: %v\n", numOfSafeReports)
+}
+
+func partTwo(scanner *utils.File) {
+	safeReport := 0
+
+	for {
+		line, err := scanner.ReadLine()
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			panic(err)
+		}
+
+		hasRemovedOneChar := false
+		desc := false
+		listOfLines := strings.Split(line, " ")
+		prevVal := convertCharToInt(listOfLines[0])
+
+		for idx, char := range listOfLines {
+			val := convertCharToInt(char)
+			if idx == 0 {
+				continue
+			}
+			if idx == 1 {
+				desc = val > prevVal
+			}
+
+			if !desc && val > prevVal {
+				if hasRemovedOneChar {
+					break
+				}
+				hasRemovedOneChar = true
+				continue
+			}
+
+			if desc && val < prevVal {
+				if hasRemovedOneChar {
+					break
+				}
+				hasRemovedOneChar = true
+				continue
+			}
+
+			diff := math.Abs(float64(prevVal - val))
+			fmt.Printf("prev, val %d - %d\n", prevVal, val)
+			if diff > 3 || diff <= 0 {
+				if hasRemovedOneChar {
+					break
+				}
+
+				hasRemovedOneChar = true
+				continue
+			}
+
+			if idx != len(listOfLines)-1 {
+				prevVal = val
+				continue
+			}
+
+			safeReport += 1
+		}
+		fmt.Println("================")
+
+	}
+
+	fmt.Printf("Safe reports : %d\n", safeReport)
+
+}
+
+func convertCharToInt(char string) int {
+	val, err := strconv.Atoi(char)
+	if err != nil {
+		panic(err)
+	}
+
+	return val
 }
