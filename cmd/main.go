@@ -1,7 +1,7 @@
 package main
 
-import dayone "aoc/pkg/day-one"
+import problems "aoc/pkg/problems/day-two"
 
 func main() {
-	dayone.DayOne()
+	problems.DayTwo()
 }

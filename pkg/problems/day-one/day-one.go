@@ -1,4 +1,4 @@
-package dayone
+package problems
 
 import (
 	"aoc/pkg/utils"
@@ -14,8 +14,9 @@ func DayOne() {
 	// put each list into a sorted slice
 	// compare the distance between
 	fileName := "problem-data.txt"
+	relativePath := "pkg/problems/day-one"
 
-	scanner, err := utils.ScanFile(fileName)
+	scanner, err := utils.ScanFile(fileName, relativePath)
 	if err != nil {
 		panic(err)
 	}

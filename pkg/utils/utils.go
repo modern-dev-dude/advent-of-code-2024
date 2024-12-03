@@ -7,13 +7,13 @@ import (
 )
 
 // full stop if the file errors
-func ScanFile(fileName string) (*File, error) {
+func ScanFile(fileName, relativePath string) (*File, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
 
-	filePath := path.Join(cwd, "pkg/day-one", fileName)
+	filePath := path.Join(cwd, relativePath, fileName)
 	file, err := os.Open(filePath)
 	if err != nil {
 		panic(err)
