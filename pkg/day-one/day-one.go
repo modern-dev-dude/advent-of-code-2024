@@ -1,11 +1,11 @@
 package dayone
 
 import (
+	"aoc/pkg/utils"
 	"bufio"
 	"fmt"
+	"io"
 	"math"
-	"os"
-	"path"
 	"sort"
 	"strconv"
 	"strings"
@@ -14,25 +14,14 @@ import (
 func DayOne() {
 	// put each list into a sorted slice
 	// compare the distance between
-	fileName := "part-one.txt"
+	fileName := "problem-data.txt"
 
-	cwd, err := os.Getwd()
+	scanner, err := utils.ScanFile(fileName)
 	if err != nil {
 		panic(err)
 	}
 
-	file, err := os.Open(path.Join(cwd, "pkg/day-one", fileName))
-	// full stop if the file errors
-	if err != nil {
-		panic(err)
-	}
-
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	if err := scanner.Err(); err != nil {
-		fmt.Println("Error reading file:", err)
-	}
+	defer scanner.CloseFile()
 
 	partTwo(scanner)
 
@@ -69,11 +58,21 @@ func partOne(scanner *bufio.Scanner) {
 	fmt.Printf("Total distance is %d\n", total)
 }
 
-func partTwo(scanner *bufio.Scanner) {
+func partTwo(scanner *utils.File) {
 	leftSlice := make([]int, 0)
 	rightSlice := make([]int, 0)
-	for scanner.Scan() {
-		input := strings.Split(scanner.Text(), " ")
+
+	for {
+		line, err := scanner.ReadLine()
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			panic(err)
+		}
+
+		input := strings.Split(line, " ")
 		lNum, err := strconv.Atoi(input[0])
 		if err != nil {
 			panic(err)
