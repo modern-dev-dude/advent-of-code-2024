@@ -2,7 +2,6 @@ package dayone
 
 import (
 	"aoc/pkg/utils"
-	"bufio"
 	"fmt"
 	"io"
 	"math"
@@ -27,11 +26,21 @@ func DayOne() {
 
 }
 
-func partOne(scanner *bufio.Scanner) {
+func partOne(scanner *utils.File) {
 	leftSlice := make([]int, 0)
 	rightSlice := make([]int, 0)
-	for scanner.Scan() {
-		input := strings.Split(scanner.Text(), " ")
+
+	for {
+		line, err := scanner.ReadLine()
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			panic(err)
+		}
+
+		input := strings.Split(line, " ")
 		lNum, err := strconv.Atoi(input[0])
 		if err != nil {
 			panic(err)
